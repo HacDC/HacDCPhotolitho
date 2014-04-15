@@ -53,22 +53,25 @@ for pcbname in `ls .. |sed -n -e '/\.pcb/s/\.pcb$//p'`; do
     pcb -x gerber --all-layers --name-style fixed --gerberfile $pcbname/$pcbname ../$pcbname.pcb
 	
 	cp ./millproject $pcbname/
+	cp OpenSCAM_Project $pcbname/
 	
 	sed 's/PCB/'$pcbname'/g' -i $pcbname/millproject
 	
 	cd $pcbname/
 	pcb2gcode
 	
-	gerbv --export rs274x --translate 0,0 --translate 3,0 --translate 0,3 --translate 3,3 --output=Panel.gbr $pcbname.top.gbr $pcbname.top.gbr $pcbname.bottom.gbr $pcbname.bottom.gbr
-	gerbv -b \#FFFFFF -f \#00000000 --export pdf --output Lithomask.pdf Panel.gbr
-	rm Panel.gbr
+	gerbv -b \#FFFFFF -f \#000000FF --export png --dpi 2400x2400 --output $pcbname.top.png $pcbname.top.gbr -f \#000000FF $pcbname.outline.gbr
+	gerbv -b \#FFFFFF -f \#000000FF --export png --dpi 2400x2400 --output $pcbname.bottom.png $pcbname.bottom.gbr -f \#000000FF $pcbname.outline.gbr
+	convert -flop -density 2400x2400 $pcbname.top.png $pcbname.top_mirror.png
+	montage -density 2400x2400 -mode concatenate -bordercolor \#000000 -border 4 -geometry '+1200+1200' $pcbname.top_mirror.png $pcbname.top_mirror.png $pcbname.bottom.png $pcbname.bottom.png Lithomask.pdf
+	rm ./*.png
 	
 	gerbv -b \#FFFFFF --export pdf --output Model.pdf -f \#8B2323 $pcbname.top.gbr -f \#3A5FCD $pcbname.bottom.gbr -f \#104E8B $pcbname.outline.gbr
 	cd ..
 	
 done
 
-find . -name drill.ngc -exec sed -i 's/.*S10000.*/&\nM3\nG91.1/' {} \;
+find . -name drill.ngc -exec sed -i 's/.*S10000.*/&\nM3\nG91.1\nG0 Z0.10000/' {} \;
 find . -maxdepth 2 -regextype posix-egrep -regex ".*(silk|fab\.gbr|plated-drill\.cnc|mask\.gbr|\.png).*" -delete
 
 echo -e '\E[1;32;46m Finished. \E[0m'

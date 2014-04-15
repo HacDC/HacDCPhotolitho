@@ -1,0 +1,24 @@
+<openscam>
+  <!-- Note, all values are in mm regardless of 'units' option. -->
+  <!-- NC Files -->
+  <nc-files>
+  ./outline.ngc
+  ./drill.ngc
+  </nc-files>
+
+  <!-- Project -->
+  <units v='INCH'/>
+
+  <!-- Renderer -->
+  <resolution v='0.066306'/>
+
+  <!-- Workpiece -->
+  <!-- MOUSER 590-660 Presensitized Board is ~150x225x-1.5875mm --> 
+  <automatic-workpiece v='false'/>
+  <workpiece-max v='(50,50,0)'/>
+  <workpiece-min v='(-25,-25,-1.5875)'/>
+
+  <tool_table>
+    <tool length='5' number='1' radius='0.6096' shape='CYLINDRICAL' units='MM'/>
+  </tool_table>
+</openscam>
