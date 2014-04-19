@@ -40,6 +40,10 @@ PWD_SanityCheck() {
 
 PWD_SanityCheck generate-photolitho.sh
 
+echo -e '\E[1;32;46m Diffing millproject.drill and millproject.outline: \E[0m'
+diff millproject.drill millproject.outline
+echo -e '\E[1;32;46m Diff complete, please review. \E[0m'
+
 # Generate Gerbers for each pcb file in the parent directory
 count=0
 for pcbname in `ls .. |sed -n -e '/\.pcb/s/\.pcb$//p'`; do
@@ -52,13 +56,21 @@ for pcbname in `ls .. |sed -n -e '/\.pcb/s/\.pcb$//p'`; do
     fi
     pcb -x gerber --all-layers --name-style fixed --gerberfile $pcbname/$pcbname ../$pcbname.pcb
 	
-	cp ./millproject $pcbname/
 	cp OpenSCAM_Project $pcbname/
 	
-	sed 's/PCB/'$pcbname'/g' -i $pcbname/millproject
-	
 	cd $pcbname/
+	
+	cp ../millproject.drill ./millproject
+	sed 's/PCB/'$pcbname'/g' -i ./millproject
 	pcb2gcode
+	
+	cp ../millproject.outline ./millproject
+	sed 's/PCB/'$pcbname'/g' -i ./millproject
+	pcb2gcode
+	
+	rm ./wrong.ngc
+	
+	echo -e "T2\nM6" > ./OpenSCAM_toolchange.ngc
 	
 	gerbv -b \#FFFFFF -f \#000000FF --export png --dpi 2400x2400 --output $pcbname.top.png $pcbname.top.gbr -f \#000000FF $pcbname.outline.gbr
 	gerbv -b \#FFFFFF -f \#000000FF --export png --dpi 2400x2400 --output $pcbname.bottom.png $pcbname.bottom.gbr -f \#000000FF $pcbname.outline.gbr
