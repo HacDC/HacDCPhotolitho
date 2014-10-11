@@ -56,7 +56,7 @@ for pcbname in `ls .. |sed -n -e '/\.pcb/s/\.pcb$//p'`; do
     fi
     pcb -x gerber --all-layers --name-style fixed --gerberfile $pcbname/$pcbname ../$pcbname.pcb
 	
-	cp OpenSCAM_Project $pcbname/
+	cp OpenSCAM_Config $pcbname/
 	
 	cd $pcbname/
 	
@@ -78,7 +78,9 @@ for pcbname in `ls .. |sed -n -e '/\.pcb/s/\.pcb$//p'`; do
 	montage -density 2400x2400 -mode concatenate -bordercolor \#000000 -border 4 -geometry '+1200+1200' $pcbname.top_mirror.png $pcbname.top_mirror.png $pcbname.bottom.png $pcbname.bottom.png Lithomask.pdf
 	rm ./*.png
 	
-	gerbv -b \#FFFFFF --export pdf --output Model.pdf -f \#8B2323 $pcbname.top.gbr -f \#3A5FCD $pcbname.bottom.gbr -f \#104E8B $pcbname.outline.gbr
+	gerbv -b \#FFFFFF --export png --dpi 2400x2400 --output Model.png -f \#000000FF $pcbname.topsilk.gbr -f \#ccccccFF $pcbname.plated-drill.cnc -f \#8B2323FF $pcbname.top.gbr -f \#3A5FCDFF $pcbname.bottom.gbr -f \#104E8BFF $pcbname.outline.gbr
+	convert -density 2400x2400 Model.png Model.pdf
+	
 	cd ..
 	
 done
