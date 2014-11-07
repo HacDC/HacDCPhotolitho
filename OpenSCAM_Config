@@ -7,7 +7,7 @@
   ./outline.ngc
   </nc-files>
 
-  <!-- MotorController -->
+  <!-- Project -->
   <units v='INCH'/>
 
   <!-- Renderer -->
@@ -16,7 +16,7 @@
   <!-- Workpiece -->
   <!-- MOUSER 590-660 Presensitized Board is ~150x225x-1.5875mm --> 
   <automatic-workpiece v='false'/>
-  <workpiece-max v='(150,100,0)'/>
+  <workpiece-max v='(50,50,0)'/>
   <workpiece-min v='(-25,-25,-1.5875)'/> <!-- 1/16th inch thick -->
   <!-- <workpiece-min v='(-25,-25,-0.396875)'/> --> <!-- 1/64th inch thick -->
 
