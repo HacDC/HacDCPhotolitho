@@ -1,3 +1,9 @@
+DEPRECATED!
+All production generation scripts are now kept in one repository, to permit use as a single submodule.
+Please see https://github.com/mirage335/gedaProduction .
+
+-
+
 Further process documenation at:
 http://wiki.hacdc.org/index.php/Category:Photolithography_PCB_Fab
 
